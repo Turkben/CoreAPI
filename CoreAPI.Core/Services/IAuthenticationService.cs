@@ -13,6 +13,6 @@ namespace CoreAPI.Core.Services
         Task<Response<TokenDto>> CreateTokenAsync(LoginDto loginDto);
         Task<Response<TokenDto>> CreateTokenByRefreshTokenAsync(string refreshToken);
         Task<Response<NoContentDto>> RevokeRefreshToken(string refreshToken);
-        Task<Response<ClientTokenDto>> CreateTokenByClientAsync(ClientLoginDto clientLoginDto);
+        Task<Response<ClientTokenDto>> CreateTokenForClientAsync(ClientLoginDto clientLoginDto);
     }
 }

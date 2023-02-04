@@ -12,6 +12,6 @@ namespace CoreAPI.Core.Services
     public interface ITokenService
     {
         TokenDto CreateToken(User userApp);
-        ClientTokenDto CreateTokenByClient(Client client);
+        ClientTokenDto CreateTokenForClient(Client client);
     }
 }
