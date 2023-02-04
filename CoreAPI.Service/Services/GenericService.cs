@@ -1,4 +1,10 @@
-﻿using CoreAPI.Core.Services;
+﻿using AutoMapper;
+using CoreAPI.Core.Repositories;
+using CoreAPI.Core.Services;
+using CoreAPI.Core.UnitOfWork;
+using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 using Shared.Libary.Dtos;
 using System;
 using System.Collections.Generic;
@@ -11,34 +17,71 @@ namespace CoreAPI.Service.Services
 {
     public class GenericService<TEntity, TDto> : IGenericService<TEntity, TDto> where TEntity : class where TDto : class
     {
-        public Task<Response<TDto>> AddAsync(TEntity entity)
+        private readonly IGenericRepository<TEntity> _repository;
+        protected readonly IUnitOfWork _unitOfWork;
+        protected readonly IMapper _mapper;
+
+        public GenericService(IGenericRepository<TEntity> repository, IUnitOfWork unitOfWork, IMapper mapper)
         {
-            throw new NotImplementedException();
+            _repository = repository;
+            _unitOfWork = unitOfWork;
+            _mapper = mapper;
+        }
+        public async Task<Response<TDto>> AddAsync(TDto dto)
+        {
+            var entity = _mapper.Map<TEntity>(dto);
+            await _repository.AddAsync(entity);
+            await _unitOfWork.CommitAsync();
+            var newDto = _mapper.Map<TDto>(entity);
+            return Response<TDto>.Success(newDto, 200);
         }
 
-        public Task<Response<IEnumerable<TDto>>> GetAllAsync()
+        public async Task<Response<IEnumerable<TDto>>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            var entites = await _repository.GetAllAsync();
+            var newDtos = _mapper.Map<IEnumerable<TDto>>(entites);
+            return Response<IEnumerable<TDto>>.Success(newDtos, StatusCodes.Status200OK);
         }
 
-        public Task<Response<TDto>> GetByIdAsync(int id)
+        public async Task<Response<TDto>> GetByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            var entity = await _repository.GetByIdAsync(id);
+
+            if (entity == null)
+            {
+                return Response<TDto>.Fail("Not Found", StatusCodes.Status404NotFound, true);
+            }
+            var newDto = _mapper.Map<TDto>(entity);
+            return Response<TDto>.Success(newDto, StatusCodes.Status200OK);
         }
 
-        public Task<Response<NoContentDto>> Remove(TEntity entity)
+        public async Task<Response<NoContentDto>> RemoveAsync(int id)
         {
-            throw new NotImplementedException();
+            var entity = await _repository.GetByIdAsync(id);
+            if (entity == null)
+            {
+                return Response<NoContentDto>.Fail("Not Found", StatusCodes.Status404NotFound, true);
+            }
+            _repository.Remove(entity);
+            await _unitOfWork.CommitAsync();
+            return Response<NoContentDto>.Success(StatusCodes.Status204NoContent);
         }
 
-        public Task<Response<NoContentDto>> Update(TEntity entity)
+        public async Task<Response<NoContentDto>> Update(TDto dto)
         {
-            throw new NotImplementedException();
+            var entity = _mapper.Map<TEntity>(dto);
+            _repository.Update(entity);
+            await _unitOfWork.CommitAsync();
+
+            return Response<NoContentDto>.Success(StatusCodes.Status204NoContent);
         }
 
-        public Task<Response<IEnumerable<TDto>>> Where(Expression<Func<TEntity, bool>> predicate)
+        public async Task<Response<IEnumerable<TDto>>> Where(Expression<Func<TEntity, bool>> predicate)
         {
-            throw new NotImplementedException();
+            var entites = await _repository.Where(predicate).ToListAsync();
+            var dtos = _mapper.Map<IEnumerable<TDto>>(entites);
+
+            return Response<IEnumerable<TDto>>.Success(dtos, StatusCodes.Status200OK);
         }
     }
 }

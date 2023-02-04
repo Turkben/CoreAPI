@@ -13,8 +13,8 @@ namespace CoreAPI.Core.Services
         Task<Response<TDto>> GetByIdAsync(int id);
         Task<Response<IEnumerable<TDto>>> GetAllAsync();
         Task<Response<IEnumerable<TDto>>> Where(Expression<Func<TEntity, bool>> predicate);
-        Task<Response<TDto>> AddAsync(TEntity entity);
-        Task<Response<NoContentDto>> Remove(TEntity entity);
-        Task<Response<NoContentDto>> Update(TEntity entity);
+        Task<Response<TDto>> AddAsync(TDto dto);
+        Task<Response<NoContentDto>> RemoveAsync(int id);
+        Task<Response<NoContentDto>> Update(TDto dto);
     }
 }
