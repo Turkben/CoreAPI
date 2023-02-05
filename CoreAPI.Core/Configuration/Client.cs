@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CoreAPI.Core.Configuration
 {
-    public interface Client
+    public class Client
     {
         public string Id { get; set; }
         public string Secret { get; set; }
