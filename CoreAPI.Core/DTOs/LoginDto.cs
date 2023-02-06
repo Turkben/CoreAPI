@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CoreAPI.Core.DTOs
 {
-    public interface LoginDto
+    public class LoginDto
     {
         public string Email { get; set; }
         public string Password { get; set; }

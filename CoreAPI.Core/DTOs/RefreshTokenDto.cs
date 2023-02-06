@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace CoreAPI.Core.DTOs
 {
-    public class ClientLoginDto
+    public class RefreshTokenDto
     {
-        public string ClientId { get; set; }
-        public string ClientSecret { get; set; }
+        public string Token { get; set; }
     }
 }

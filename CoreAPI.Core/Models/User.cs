@@ -9,6 +9,6 @@ namespace CoreAPI.Core.Models
 {
     public class User: IdentityUser
     {
-        public string City { get; set; }
+        public string? City { get; set; }
     }
 }

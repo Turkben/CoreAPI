@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Shared.Libary.Configuration;
+using Shared.Libary.Extensions;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -50,30 +51,11 @@ builder.Services.AddIdentity<User, IdentityRole>(x =>
 //options patterns: to reach appsetting from di
 builder.Services.Configure<CustomTokenOption>(builder.Configuration.GetSection("TokenOptions"));
 builder.Services.Configure<List<Client>>(builder.Configuration.GetSection("Clients"));
-var tokenOptions = builder.Configuration.GetSection("TokenOptions").Get<CustomTokenOption>();
+
 
 //configure jwt
-builder.Services.AddAuthentication(options =>
-{
-    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme= JwtBearerDefaults.AuthenticationScheme;
-})
-    .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
-{
-    options.TokenValidationParameters = new TokenValidationParameters()
-    {
-        ValidIssuer = tokenOptions.Issuer,
-        ValidAudience = tokenOptions.Audiences[0],
-        IssuerSigningKey = SignService.GetSymmetricSecurityKey(tokenOptions.Issuer),
-        ValidateIssuerSigningKey = true,
-        ValidateAudience = true,
-        ValidateIssuer=true,
-        ClockSkew = TimeSpan.Zero
-
-
-
-    };
-});
+var tokenOptions = builder.Configuration.GetSection("TokenOptions").Get<CustomTokenOption>();
+builder.Services.AddCustomTokenAuth(tokenOptions);
 
 //add mapper
 builder.Services.AddAutoMapper(typeof(MapProfile));
