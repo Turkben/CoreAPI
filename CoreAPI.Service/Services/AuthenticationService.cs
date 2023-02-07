@@ -37,6 +37,7 @@ namespace CoreAPI.Service.Services
         public async Task<Response<TokenDto>> CreateTokenAsync(LoginDto loginDto)
         {
             if (loginDto == null) throw new ArgumentNullException(nameof(loginDto));
+
             var user = await _userManager.FindByEmailAsync(loginDto.Email);
             if (user == null) return Response<TokenDto>.Fail("Email or Password is wrong!",StatusCodes.Status400BadRequest,true);
             if (!await _userManager.CheckPasswordAsync(user,loginDto.Password))

@@ -35,6 +35,7 @@ namespace CoreAPI.API.Controllers
             return CreateActionResult(await _userService.GetUserByNameAsync(HttpContext.User.Identity.Name));
         }
 
+        //Deprecated
 
         //[HttpPost("CreateUserRoles/{userName}")]
         

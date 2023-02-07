@@ -7,7 +7,7 @@ namespace MiniAPP1.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    [Authorize(Roles = "Admin,Manager",Policy ="CityPolicy")]
     public class StocksController : ControllerBase
     {
         [HttpGet]

@@ -49,7 +49,8 @@ namespace CoreAPI.Service.Services
                //new Claim("email",user.Email)
                new Claim(ClaimTypes.Email,user.Email),
                new Claim(ClaimTypes.Name,user.UserName),
-               new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString())
+               new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString()),
+               new Claim("city", user.City)
             };
             claimList.AddRange(audiences.Select(x => new Claim(JwtRegisteredClaimNames.Aud, x)));
             claimList.AddRange(userRoles.Select(x => new Claim(ClaimTypes.Role, x)));
