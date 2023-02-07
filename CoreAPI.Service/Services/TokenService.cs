@@ -39,12 +39,12 @@ namespace CoreAPI.Service.Services
             return Convert.ToBase64String(numberByte);
         }
 
-        private IEnumerable<Claim> GetClaims(User user, List<string> audiences)
+        private async Task<IEnumerable<Claim>> GetClaims(User user, List<string> audiences)
         {
+            var userRoles = await _userManager.GetRolesAsync(user);
             var claimList = new List<Claim>()
             {
                new Claim(ClaimTypes.NameIdentifier,user.Id),
-               // TODO: new Claim(ClaimTypes.Role,user.Role)
                //new Claim(JwtRegisteredClaimNames.Email,user.Email),
                //new Claim("email",user.Email)
                new Claim(ClaimTypes.Email,user.Email),
@@ -52,6 +52,7 @@ namespace CoreAPI.Service.Services
                new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString())
             };
             claimList.AddRange(audiences.Select(x => new Claim(JwtRegisteredClaimNames.Aud, x)));
+            claimList.AddRange(userRoles.Select(x => new Claim(ClaimTypes.Role, x)));
             return claimList;
         }
 
@@ -78,7 +79,7 @@ namespace CoreAPI.Service.Services
                 issuer: _tokenOption.Issuer,
                 expires: accessTokenExpiration,
                 notBefore: DateTime.Now,
-                claims: GetClaims(user,_tokenOption.Audiences),
+                claims: GetClaims(user,_tokenOption.Audiences).Result,
                 signingCredentials:signingCredentials);
 
             var handler = new JwtSecurityTokenHandler();

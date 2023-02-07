@@ -33,6 +33,14 @@ namespace CoreAPI.API.Controllers
         {
             //var userName= HttpContext.User.Claims.Where(x => x.Type == "UserName").FirstOrDefault();
             return CreateActionResult(await _userService.GetUserByNameAsync(HttpContext.User.Identity.Name));
-        }   
+        }
+
+
+        //[HttpPost("CreateUserRoles/{userName}")]
+        
+        //public async Task<IActionResult> CreateUserRoles(string userName)
+        //{
+        //    return CreateActionResult(await _userService.CreateUserRoles(userName));
+        //}
     }
 }

@@ -12,5 +12,7 @@ namespace CoreAPI.Core.Services
     {
         Task<Response<UserDto>> CreateUserAsync(CreateUserDto createUserDto);
         Task<Response<UserDto>> GetUserByNameAsync(string userName);
+
+        Task<Response<NoContentDto>> CreateUserRoles(string userName);
     }
 }
