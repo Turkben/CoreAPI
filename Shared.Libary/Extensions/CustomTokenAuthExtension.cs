@@ -31,6 +31,7 @@ namespace Shared.Libary.Extensions
              ValidateIssuerSigningKey = true,
              ValidateAudience = true,
              ValidateIssuer = true,
+             ValidateLifetime = true,
              ClockSkew = TimeSpan.Zero
          };
      });

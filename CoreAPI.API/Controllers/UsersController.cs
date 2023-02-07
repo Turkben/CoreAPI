@@ -3,6 +3,7 @@ using CoreAPI.Core.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Shared.Libary.Exceptions;
 
 namespace CoreAPI.API.Controllers
 {
@@ -22,6 +23,8 @@ namespace CoreAPI.API.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateUser(CreateUserDto createUserDto)
         {
+            //throw new CustomException("There is a error about db");
+
             return CreateActionResult(await _userService.CreateUserAsync(createUserDto));
         }
         
