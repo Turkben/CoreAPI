@@ -1,1 +1,1 @@
-# CoreAPI
+# CoreAPI + JWT Auth Service
